@@ -14,6 +14,8 @@ import dagger.Component;
 @Component(modules = {ApplicationModule.class})
 public interface ApplicationComponent {
 
+    void inject(HackersNews app);
+
     void inject(MainActivity activity);
 
 }

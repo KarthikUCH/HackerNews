@@ -30,4 +30,8 @@ dependencies {
     // Dagger Library
     compile "com.google.dagger:dagger:$rootProject.DaggerVersion"
     annotationProcessor "com.google.dagger:dagger-compiler:$rootProject.DaggerVersion"
+
+    // Retrofit & OKHttp Library
+    compile "com.squareup.retrofit2:retrofit:$rootProject.RetrofitVersion"
+    compile "com.squareup.retrofit2:converter-gson:$rootProject.RetrofitVersion"
 }

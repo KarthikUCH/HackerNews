@@ -32,4 +32,5 @@ ext {
     // dependencies versions
     supportLibraryVersion = '25.3.1'
     DaggerVersion = '2.7'
+    RetrofitVersion = '2.3.0'
 }
