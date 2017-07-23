@@ -2,6 +2,10 @@ package com.pg.demo.hackernews.application;
 
 import android.app.Application;
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+
+import com.pg.demo.hackernews.data.DbManager;
+import com.pg.demo.hackernews.data.TopStoryManager;
 
 import javax.inject.Singleton;
 
@@ -10,6 +14,8 @@ import dagger.Provides;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import rx.Scheduler;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by karthikeyan on 22/7/17.
@@ -44,5 +50,22 @@ public class ApplicationModule {
                 .client(httpClient.build())
                 .build();
         return retrofit;
+    }
+
+    @Provides
+    SQLiteDatabase providesSQSqLiteDatabase() {
+        return DbManager.getInstance(mApp).getDbHelper();
+    }
+
+    @Provides
+    @Singleton
+    Scheduler provideScheduler() {
+        return Schedulers.io();
+    }
+
+    @Provides
+    @Singleton
+    TopStoryManager providesTopStoryManager(SQLiteDatabase dbHelper, Scheduler scheduler, Retrofit retrofit) {
+        return new TopStoryManager(mApp, dbHelper, scheduler, retrofit);
     }
 }
