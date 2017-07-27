@@ -78,6 +78,7 @@ public class StoryDetailsManager {
      *
      * @param storyId The unique of for the story
      * @return
+     * @see <a href="https://stackoverflow.com/a/19915206/2790197">Reference</a>
      */
     private ArrayList<StoryDetail> getStoryDetails(long storyId) {
         ArrayList<StoryDetail> storyDetails = new ArrayList<>();
@@ -171,7 +172,7 @@ public class StoryDetailsManager {
                     for (long kidId : idLst) {
                         ResponseStoryItem item = mTopStoryManager.retrieveStoryDetail(kidId);
                         mTopStoryManager.insertItemDetails(item);
-                        if (item!= null && item.getKids() != null && item.getKids().length > 0) {
+                        if (item != null && item.getKids() != null && item.getKids().length > 0) {
                             for (long kidsId : item.getKids()) {
                                 kidsItemList.add(kidsId);
                             }

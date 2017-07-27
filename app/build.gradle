@@ -31,7 +31,6 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
-    testCompile 'junit:junit:4.12'
 
     compile "com.android.support:recyclerview-v7:$rootProject.supportLibraryVersion"
 
@@ -42,8 +41,17 @@ dependencies {
     // Retrofit & OKHttp Library
     compile "com.squareup.retrofit2:retrofit:$rootProject.RetrofitVersion"
     compile "com.squareup.retrofit2:converter-gson:$rootProject.RetrofitVersion"
+    compile "com.squareup.okhttp3:okhttp:$rootProject.okhttpVersion"
+    compile "com.squareup.okhttp3:logging-interceptor:$rootProject.okhttpVersion"
+    compile "com.squareup.okhttp3:okhttp-urlconnection:$rootProject.okhttpVersion"
 
     // rx java & android
-    compile "io.reactivex:rxjava:$rxJavaVersion"
-    compile "io.reactivex:rxandroid:$rxAndroidVersion"
+    compile "io.reactivex:rxjava:$rootProject.rxJavaVersion"
+    compile "io.reactivex:rxandroid:$rootProject.rxAndroidVersion"
+    compile 'com.android.support.constraint:constraint-layout:1.0.0-beta3'
+
+
+    testCompile "junit:junit:$rootProject.junitVersion",
+            "org.mockito:mockito-core:$rootProject.mockitoVersion",
+            "com.squareup.okhttp3:mockwebserver:$rootProject.mockwebserverVersion"
 }

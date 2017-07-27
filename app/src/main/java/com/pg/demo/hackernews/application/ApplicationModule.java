@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import com.pg.demo.hackernews.data.DbManager;
 import com.pg.demo.hackernews.data.StoryDetailsManager;
 import com.pg.demo.hackernews.data.TopStoryManager;
+import com.pg.demo.hackernews.network.RestServiceFactory;
 
 import javax.inject.Singleton;
 
@@ -40,17 +41,8 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
-    Retrofit providesRestServiceFactory() {
-        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-
-        Retrofit.Builder builder = new Retrofit.Builder()
-                .baseUrl(API_BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create());
-
-        Retrofit retrofit = builder
-                .client(httpClient.build())
-                .build();
-        return retrofit;
+    RestServiceFactory providesRestServiceFactory() {
+        return new RestServiceFactory.Impl();
     }
 
     @Provides
@@ -66,13 +58,13 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
-    TopStoryManager providesTopStoryManager(SQLiteDatabase dbHelper, Scheduler scheduler, Retrofit retrofit) {
-        return new TopStoryManager(mApp, dbHelper, scheduler, retrofit);
+    TopStoryManager providesTopStoryManager(SQLiteDatabase dbHelper, Scheduler scheduler, RestServiceFactory restServiceFactory) {
+        return new TopStoryManager(mApp, dbHelper, scheduler, restServiceFactory);
     }
 
     @Provides
     @Singleton
-    StoryDetailsManager providesStoryDetailsManager(SQLiteDatabase dbHelper, Scheduler scheduler, TopStoryManager topStoryManager){
+    StoryDetailsManager providesStoryDetailsManager(SQLiteDatabase dbHelper, Scheduler scheduler, TopStoryManager topStoryManager) {
         return new StoryDetailsManager(mApp, dbHelper, scheduler, topStoryManager);
     }
 }

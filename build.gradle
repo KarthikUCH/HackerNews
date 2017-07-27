@@ -33,6 +33,10 @@ ext {
     supportLibraryVersion = '25.3.1'
     DaggerVersion = '2.7'
     RetrofitVersion = '2.3.0'
+    okhttpVersion = "3.8.0"
     rxJavaVersion = "1.1.7"
     rxAndroidVersion = "1.2.1"
+    mockitoVersion = "2.1.0"
+    junitVersion = "4.12"
+    mockwebserverVersion = "3.8.0"
 }

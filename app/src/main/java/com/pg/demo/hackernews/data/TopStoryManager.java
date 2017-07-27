@@ -11,15 +11,14 @@ import com.pg.demo.hackernews.data.DbConstants.ItemDetail;
 import com.pg.demo.hackernews.data.DbConstants.Tables;
 import com.pg.demo.hackernews.data.DbConstants.TopStories;
 import com.pg.demo.hackernews.network.HackersNewsService;
+import com.pg.demo.hackernews.network.RestServiceFactory;
 import com.pg.demo.hackernews.network.models.gson.ResponseStoryItem;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 import rx.Observable;
 import rx.Scheduler;
 import rx.android.schedulers.AndroidSchedulers;
@@ -36,7 +35,7 @@ public class TopStoryManager {
     private final Context mContext;
     private final SQLiteDatabase mDbHelper;
     private final Scheduler mScheduler;
-    private final Retrofit mRetrofit;
+    private final RestServiceFactory mRestServiceFactory;
 
     private Observer mObserver;
     private boolean flagLoadingStories = false;
@@ -47,11 +46,11 @@ public class TopStoryManager {
         void addStory(ResponseStoryItem story);
     }
 
-    public TopStoryManager(Context context, SQLiteDatabase dbHelper, Scheduler scheduler, Retrofit retrofit) {
+    public TopStoryManager(Context context, SQLiteDatabase dbHelper, Scheduler scheduler, RestServiceFactory restServiceFactory) {
         mDbHelper = dbHelper;
         mContext = context;
         mScheduler = scheduler;
-        mRetrofit = retrofit;
+        mRestServiceFactory = restServiceFactory;
     }
 
     public void attach(Observer observer) {
@@ -118,7 +117,7 @@ public class TopStoryManager {
      * @return the row ID of the newly inserted row, or -1 if an error occurred
      */
     @WorkerThread
-    private long insertTopStoryId(long storyId) {
+    public long insertTopStoryId(long storyId) {
         ContentValues values = new ContentValues();
         values.put(TopStories.COLUMN_TOP_STORY_ID, storyId);
         return mDbHelper.insert(Tables.TOP_STORIES, null, values);
@@ -174,12 +173,16 @@ public class TopStoryManager {
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-    private void retrieveTopStories() {
+    public void retrieveTopStories() {
         if (flagLoadingStories) {
             return;
         }
         flagLoadingStories = true;
         Observable.defer(() -> Observable.from(retrieveTopStoryIds()))
+                .map(storyId -> {
+                    insertTopStoryId(storyId);
+                    return storyId;
+                })
                 .map(storyId -> {
                     if (!checkStoryExists(storyId)) {
                         ResponseStoryItem item = retrieveStoryDetail(storyId);
@@ -218,16 +221,13 @@ public class TopStoryManager {
      * @return List of TopStories
      */
     @WorkerThread
-    private List<Long> retrieveTopStoryIds() {
-        HackersNewsService mHackersNewsService = mRetrofit.create(HackersNewsService.class);
+    public List<Long> retrieveTopStoryIds() {
+        HackersNewsService mHackersNewsService = mRestServiceFactory.create(HackersNewsService.class);
         Call<List<Long>> call = mHackersNewsService.getTopStories();
 
         try {
             Response<List<Long>> response = call.execute();
             if (response.code() == 200) {
-                for (Long stories : response.body()) {
-                    insertTopStoryId(stories);
-                }
                 return response.body();
             } else {
                 throw new Exception(response.message());
@@ -247,7 +247,7 @@ public class TopStoryManager {
      */
     @WorkerThread
     public ResponseStoryItem retrieveStoryDetail(Long itemId) {
-        HackersNewsService mHackersNewsService = mRetrofit.create(HackersNewsService.class);
+        HackersNewsService mHackersNewsService = mRestServiceFactory.create(HackersNewsService.class);
         Call<ResponseStoryItem> call = mHackersNewsService.getStoryDetail(itemId + ".json");
         try {
             Response<ResponseStoryItem> response = call.execute();
