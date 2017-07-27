@@ -183,9 +183,11 @@ public class TopStoryManager {
                 .map(storyId -> {
                     if (!checkStoryExists(storyId)) {
                         ResponseStoryItem item = retrieveStoryDetail(storyId);
-                        long result = insertItemDetails(item);
-                        if (result >= 0) {
-                            return item;
+                        if (item != null) {
+                            long result = insertItemDetails(item);
+                            if (result >= 0) {
+                                return item;
+                            }
                         }
                     }
                     return null;
@@ -222,14 +224,19 @@ public class TopStoryManager {
 
         try {
             Response<List<Long>> response = call.execute();
-            for (Long stories : response.body()) {
-                insertTopStoryId(stories);
+            if (response.code() == 200) {
+                for (Long stories : response.body()) {
+                    insertTopStoryId(stories);
+                }
+                return response.body();
+            } else {
+                throw new Exception(response.message());
             }
-            return response.body();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            return new ArrayList<>();
         }
+
     }
 
     /**
@@ -243,9 +250,13 @@ public class TopStoryManager {
         HackersNewsService mHackersNewsService = mRetrofit.create(HackersNewsService.class);
         Call<ResponseStoryItem> call = mHackersNewsService.getStoryDetail(itemId + ".json");
         try {
-            Response<ResponseStoryItem> storyDetail = call.execute();
-            return storyDetail.body();
-        } catch (IOException e) {
+            Response<ResponseStoryItem> response = call.execute();
+            if (response.code() == 200) {
+                return response.body();
+            } else {
+                throw new Exception(response.message());
+            }
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }

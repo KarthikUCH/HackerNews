@@ -171,7 +171,7 @@ public class StoryDetailsManager {
                     for (long kidId : idLst) {
                         ResponseStoryItem item = mTopStoryManager.retrieveStoryDetail(kidId);
                         mTopStoryManager.insertItemDetails(item);
-                        if (item.getKids() != null && item.getKids().length > 0) {
+                        if (item!= null && item.getKids() != null && item.getKids().length > 0) {
                             for (long kidsId : item.getKids()) {
                                 kidsItemList.add(kidsId);
                             }
