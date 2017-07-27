@@ -1,6 +1,6 @@
 package com.pg.demo.hackernews.network;
 
-import com.pg.demo.hackernews.network.models.StoryItem;
+import com.pg.demo.hackernews.network.models.gson.ResponseStoryItem;
 
 import java.util.List;
 
@@ -18,5 +18,5 @@ public interface HackersNewsService {
     Call<List<Long>> getTopStories();
 
     @GET("item/{id}")
-    Call<StoryItem> getStoryDetail(@Path("id") String id);
+    Call<ResponseStoryItem> getStoryDetail(@Path("id") String id);
 }

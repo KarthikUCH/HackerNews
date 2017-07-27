@@ -38,6 +38,7 @@ public class DbConstants {
         String COLUMN_ITEM_URL = "item_url";
         String COLUMN_ITEM_SCORE = "item_score";
         String COLUMN_ITEM_TITLE = "item_title";
+        String COLUMN_ITEM_COMMENT_COUNT = "item_comment_count";
     }
 
     // CREATE TABLE SQL QUERY
@@ -61,6 +62,7 @@ public class DbConstants {
                     ItemDetail.COLUMN_ITEM_POLL + INTEGER_TYPE + COMMA_SEP +
                     ItemDetail.COLUMN_ITEM_URL + TEXT_TYPE + COMMA_SEP +
                     ItemDetail.COLUMN_ITEM_SCORE + TEXT_TYPE + COMMA_SEP +
+                    ItemDetail.COLUMN_ITEM_COMMENT_COUNT + INTEGER_TYPE + COMMA_SEP +
                     " UNIQUE (" + ItemDetail.COLUMN_ITEM_ID + ") ON CONFLICT IGNORE)";
 
 

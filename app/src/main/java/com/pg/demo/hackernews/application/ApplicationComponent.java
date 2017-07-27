@@ -1,6 +1,7 @@
 package com.pg.demo.hackernews.application;
 
 import com.pg.demo.hackernews.ui.MainActivity;
+import com.pg.demo.hackernews.ui.StoryDetailActivity;
 
 import javax.inject.Singleton;
 
@@ -18,4 +19,5 @@ public interface ApplicationComponent {
 
     void inject(MainActivity activity);
 
+    void inject(StoryDetailActivity activity);
 }

@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.pg.demo.hackernews.application.ApplicationComponent;
 import com.pg.demo.hackernews.application.HackersNews;
+import com.pg.demo.hackernews.data.StoryDetailsManager;
 import com.pg.demo.hackernews.data.TopStoryManager;
 
 import javax.inject.Inject;
@@ -25,6 +26,9 @@ public abstract class InjectableActivity extends AppCompatActivity {
 
     @Inject
     TopStoryManager mTopStoryManager;
+
+    @Inject
+    StoryDetailsManager mStoryDetailsManager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

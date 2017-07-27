@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.pg.demo.hackernews.data.DbManager;
+import com.pg.demo.hackernews.data.StoryDetailsManager;
 import com.pg.demo.hackernews.data.TopStoryManager;
 
 import javax.inject.Singleton;
@@ -67,5 +68,11 @@ public class ApplicationModule {
     @Singleton
     TopStoryManager providesTopStoryManager(SQLiteDatabase dbHelper, Scheduler scheduler, Retrofit retrofit) {
         return new TopStoryManager(mApp, dbHelper, scheduler, retrofit);
+    }
+
+    @Provides
+    @Singleton
+    StoryDetailsManager providesStoryDetailsManager(SQLiteDatabase dbHelper, Scheduler scheduler, TopStoryManager topStoryManager){
+        return new StoryDetailsManager(mApp, dbHelper, scheduler, topStoryManager);
     }
 }
