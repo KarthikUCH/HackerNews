@@ -58,7 +58,7 @@ public class TopStoriesAdapter extends RecyclerView.Adapter<TopStoriesAdapter.To
         holder.tvScore.setText(String.valueOf(story.getScore()));
 
         long storyId = story.getId();
-        holder.tvTitle.setOnClickListener(v -> mClickListner.onCLick(storyId));
+        holder.itemView.setOnClickListener(v -> mClickListner.onCLick(storyId));
 
 
     }

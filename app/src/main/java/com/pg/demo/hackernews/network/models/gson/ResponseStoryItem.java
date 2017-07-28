@@ -6,21 +6,21 @@ package com.pg.demo.hackernews.network.models.gson;
 
 public class ResponseStoryItem {
 
-    private long id;
-    private boolean deleted;
-    private String type;
-    private String by;
-    private long time;
-    private String text;
-    private boolean dead;
-    private long parent;
-    private long poll;
-    private long[] kids;
-    private String url;
-    private int score;
-    private String title;
-    private long[] parts;
-    private int descendants = -1;
+    public long id;
+    public boolean deleted;
+    public String type;
+    public String by;
+    public long time;
+    public String text;
+    public boolean dead;
+    public long parent;
+    public long poll;
+    public long[] kids;
+    public String url;
+    public int score;
+    public String title;
+    public long[] parts;
+    public int descendants = -1;
 
     // GETTERS
     public long getId() {

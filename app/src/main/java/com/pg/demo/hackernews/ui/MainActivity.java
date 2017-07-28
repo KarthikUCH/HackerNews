@@ -2,9 +2,11 @@ package com.pg.demo.hackernews.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 
 import com.pg.demo.hackernews.R;
 import com.pg.demo.hackernews.application.ApplicationComponent;
@@ -16,6 +18,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends InjectableActivity implements TopStoryManager.Observer, TopStoriesAdapter.ClickListner {
 
+    SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
     private TopStoriesAdapter mAdapter;
 
@@ -24,7 +27,12 @@ public class MainActivity extends InjectableActivity implements TopStoryManager.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view_top_story);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh_layout);
         loadTopStories();
+
+        mSwipeRefreshLayout.setOnRefreshListener(() -> {
+            mTopStoryManager.onRefresh();
+        });
     }
 
     @Override
@@ -61,6 +69,11 @@ public class MainActivity extends InjectableActivity implements TopStoryManager.
     @Override
     public void addStory(ResponseStoryItem storyItem) {
         mAdapter.addItem(storyItem);
+    }
+
+    @Override
+    public void setRefreshing(boolean refreshing) {
+        mSwipeRefreshLayout.setRefreshing(refreshing);
     }
 
     @Override

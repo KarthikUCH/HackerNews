@@ -44,6 +44,8 @@ public class TopStoryManager {
         void onStoriesLoaded(ArrayList<ResponseStoryItem> topStories);
 
         void addStory(ResponseStoryItem story);
+
+        void setRefreshing(boolean refreshing);
     }
 
     public TopStoryManager(Context context, SQLiteDatabase dbHelper, Scheduler scheduler, RestServiceFactory restServiceFactory) {
@@ -68,6 +70,10 @@ public class TopStoryManager {
                             Log.i(TAG, "OnCompleted");
                             retrieveTopStories();
                         });
+    }
+
+    public void onRefresh() {
+        retrieveTopStories();
     }
 
     public void detach() {
@@ -178,6 +184,7 @@ public class TopStoryManager {
             return;
         }
         flagLoadingStories = true;
+        mObserver.setRefreshing(true);
         Observable.defer(() -> getTopStoriesObservable())
                 .subscribeOn(mScheduler)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -193,6 +200,7 @@ public class TopStoryManager {
                         () -> {
                             Log.i(TAG, "OnCompleted");
                             flagLoadingStories = false;
+                            mObserver.setRefreshing(false);
                         }
                 );
     }
