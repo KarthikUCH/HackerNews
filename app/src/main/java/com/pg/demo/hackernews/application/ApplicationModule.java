@@ -9,6 +9,9 @@ import com.pg.demo.hackernews.data.StoryDetailsManager;
 import com.pg.demo.hackernews.data.TopStoryManager;
 import com.pg.demo.hackernews.network.RestServiceFactory;
 
+import java.util.concurrent.Executors;
+
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -52,19 +55,32 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
-    Scheduler provideScheduler() {
-        return Schedulers.io();
+    @Named("topItem")
+    public Scheduler topItemScheduler() {
+        return Schedulers.from(Executors.newFixedThreadPool(
+                Runtime.getRuntime().availableProcessors()
+        ));
     }
 
     @Provides
     @Singleton
-    TopStoryManager providesTopStoryManager(SQLiteDatabase dbHelper, Scheduler scheduler, RestServiceFactory restServiceFactory) {
+    @Named("itemDetail")
+    public Scheduler itemdetailScheduler() {
+        return Schedulers.from(Executors.newFixedThreadPool(
+                Runtime.getRuntime().availableProcessors()
+        ));
+    }
+
+
+    @Provides
+    @Singleton
+    TopStoryManager providesTopStoryManager(SQLiteDatabase dbHelper, @Named("topItem") Scheduler scheduler, RestServiceFactory restServiceFactory) {
         return new TopStoryManager(mApp, dbHelper, scheduler, restServiceFactory);
     }
 
     @Provides
     @Singleton
-    StoryDetailsManager providesStoryDetailsManager(SQLiteDatabase dbHelper, Scheduler scheduler, TopStoryManager topStoryManager) {
+    StoryDetailsManager providesStoryDetailsManager(SQLiteDatabase dbHelper, @Named("itemDetail") Scheduler scheduler, TopStoryManager topStoryManager) {
         return new StoryDetailsManager(mApp, dbHelper, scheduler, topStoryManager);
     }
 }
