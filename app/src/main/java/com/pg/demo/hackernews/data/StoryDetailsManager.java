@@ -95,7 +95,7 @@ public class StoryDetailsManager {
             StoryDetail story = CursorUtil.getStoryDetails(cursor);
             storyDetails.add(story);
         }
-
+        cursor.close();
         return storyDetails;
     }
 

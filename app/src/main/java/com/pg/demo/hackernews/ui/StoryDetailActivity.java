@@ -31,14 +31,14 @@ public class StoryDetailActivity extends InjectableActivity implements StoryDeta
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
+    protected void onResume() {
+        super.onResume();
         mStoryDetailsManager.attach(this, storyId);
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onPause() {
+        super.onPause();
         mStoryDetailsManager.detach();
     }
 

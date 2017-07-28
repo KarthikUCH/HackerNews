@@ -65,7 +65,7 @@ public class ApplicationModule {
     @Provides
     @Singleton
     @Named("itemDetail")
-    public Scheduler itemdetailScheduler() {
+    public Scheduler itemDetailScheduler() {
         return Schedulers.from(Executors.newFixedThreadPool(
                 Runtime.getRuntime().availableProcessors()
         ));
