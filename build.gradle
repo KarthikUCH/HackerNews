@@ -38,5 +38,6 @@ ext {
     rxAndroidVersion = "1.2.1"
     mockitoVersion = "2.1.0"
     junitVersion = "4.12"
+    robolectricVersion = "3.3.2"
     mockwebserverVersion = "3.8.0"
 }

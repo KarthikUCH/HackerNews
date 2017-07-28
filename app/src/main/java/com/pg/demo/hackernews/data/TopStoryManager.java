@@ -85,7 +85,7 @@ public class TopStoryManager {
      *
      * @return The list of {@link ResponseStoryItem}
      */
-    private ArrayList<ResponseStoryItem> getTopStories() {
+    public ArrayList<ResponseStoryItem> getTopStories() {
 
         ArrayList<ResponseStoryItem> topStories = new ArrayList<>();
 
@@ -154,7 +154,7 @@ public class TopStoryManager {
      * @param itemId unique id of story / comment
      * @return
      */
-    private boolean checkStoryExists(long itemId) {
+    public boolean checkStoryExists(long itemId) {
         boolean result = false;
         Cursor cursor = mDbHelper.query(Tables.ITEM_DETAIL, null, ItemDetail.COLUMN_ITEM_ID + " =?", new String[]{String.valueOf(itemId)},
                 null, null, null);
@@ -178,24 +178,7 @@ public class TopStoryManager {
             return;
         }
         flagLoadingStories = true;
-        Observable.defer(() -> Observable.from(retrieveTopStoryIds()))
-                .map(storyId -> {
-                    insertTopStoryId(storyId);
-                    return storyId;
-                })
-                .map(storyId -> {
-                    if (!checkStoryExists(storyId)) {
-                        ResponseStoryItem item = retrieveStoryDetail(storyId);
-                        if (item != null) {
-                            long result = insertItemDetails(item);
-                            if (result >= 0) {
-                                return item;
-                            }
-                        }
-                    }
-                    return null;
-
-                })
+        Observable.defer(() -> getTopStoriesObservable())
                 .subscribeOn(mScheduler)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
@@ -212,6 +195,27 @@ public class TopStoryManager {
                             flagLoadingStories = false;
                         }
                 );
+    }
+
+    public Observable<ResponseStoryItem> getTopStoriesObservable() {
+        return Observable.from(retrieveTopStoryIds())
+                .map(storyId -> {
+                    insertTopStoryId(storyId);
+                    return storyId;
+                })
+                .map(storyId -> {
+                    if (!checkStoryExists(storyId)) {
+                        ResponseStoryItem item = retrieveStoryDetail(storyId);
+                        if (item != null) {
+                            long result = insertItemDetails(item);
+                            if (result >= 0) {
+                                return item;
+                            }
+                        }
+                    }
+                    return null;
+
+                });
     }
 
 

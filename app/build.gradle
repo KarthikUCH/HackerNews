@@ -53,5 +53,6 @@ dependencies {
 
     testCompile "junit:junit:$rootProject.junitVersion",
             "org.mockito:mockito-core:$rootProject.mockitoVersion",
-            "com.squareup.okhttp3:mockwebserver:$rootProject.mockwebserverVersion"
+            "com.squareup.okhttp3:mockwebserver:$rootProject.mockwebserverVersion",
+            "org.robolectric:robolectric:$robolectricVersion"
 }

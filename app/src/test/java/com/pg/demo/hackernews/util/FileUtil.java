@@ -1,8 +1,10 @@
 package com.pg.demo.hackernews.util;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URL;
 
 /**
  * Created by karthikeyan on 27/7/17.
@@ -10,7 +12,14 @@ import java.io.InputStreamReader;
 
 public class FileUtil {
 
-    public static String getFileFromPath(Object obj, String fileName) throws Exception {
+    public static File getFileFromPath(Object obj, String fileName) throws Exception
+    {
+        ClassLoader classLoader = obj.getClass().getClassLoader();
+        URL resource = classLoader.getResource(fileName);
+        return new File(resource.getPath());
+    }
+
+    public static String getFileContentFromPath(Object obj, String fileName) throws Exception {
         ClassLoader classLoader = obj.getClass().getClassLoader();
         InputStream resources = classLoader.getResourceAsStream(fileName);
         return convertStreamToString(resources);

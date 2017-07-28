@@ -6,11 +6,11 @@ package com.pg.demo.hackernews.network.models.gson;
 
 public class ResponseStoryItem {
 
-    public long id;
+    private long id;
     private boolean deleted;
     private String type;
-    public String by;
-    public long time;
+    private String by;
+    private long time;
     private String text;
     private boolean dead;
     private long parent;

@@ -80,7 +80,7 @@ public class StoryDetailsManager {
      * @return
      * @see <a href="https://stackoverflow.com/a/19915206/2790197">Reference</a>
      */
-    private ArrayList<StoryDetail> getStoryDetails(long storyId) {
+    public ArrayList<StoryDetail> getStoryDetails(long storyId) {
         ArrayList<StoryDetail> storyDetails = new ArrayList<>();
         String QUERY = " WITH StoryDetail as ( " +
                 " SELECT P.item_id, P.item_parent, P.item_poll, P.item_post_by, P.item_posted_time, P.item_score, P.item_text, P.item_title, P.item_type, P.item_url, P.item_comment_count, 1 as level " +
