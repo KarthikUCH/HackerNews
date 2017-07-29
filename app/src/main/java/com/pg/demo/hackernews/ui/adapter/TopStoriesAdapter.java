@@ -2,6 +2,7 @@ package com.pg.demo.hackernews.ui.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableString;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.pg.demo.hackernews.R;
+import com.pg.demo.hackernews.Util.AppUtil;
 import com.pg.demo.hackernews.network.models.gson.ResponseStoryItem;
 
 import java.util.ArrayList;
@@ -49,11 +51,9 @@ public class TopStoriesAdapter extends RecyclerView.Adapter<TopStoriesAdapter.To
 
         holder.tvTitle.setText(story.getTitle());
         holder.tvUser.setText(story.getBy());
-        CharSequence time = DateUtils.formatDateTime(
-                mContext,
-                story.getTime(),
-                DateUtils.FORMAT_ABBREV_ALL);
-        holder.tvTime.setText(time);
+        SpannableString timeSpannable = new SpannableString(
+                AppUtil.getAbbreviatedTimeSpan(story.getTime() * 1000));
+        holder.tvTime.setText(timeSpannable);
         holder.tvComments.setText(story.getDescendants() + " Comments");
         holder.tvScore.setText(String.valueOf(story.getScore()));
 

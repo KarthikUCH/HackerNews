@@ -2,6 +2,9 @@ package com.pg.demo.hackernews.ui.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.pg.demo.hackernews.R;
+import com.pg.demo.hackernews.Util.AppUtil;
 import com.pg.demo.hackernews.network.models.StoryDetail;
 import com.pg.demo.hackernews.network.models.gson.ResponseStoryItem;
 
@@ -69,11 +73,9 @@ public class StoryDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         holder.tvTitle.setText(storyItem.getTitle());
         holder.tvUser.setText(storyItem.getBy());
-        CharSequence time = DateUtils.formatDateTime(
-                mContext,
-                storyItem.getTime(),
-                DateUtils.FORMAT_ABBREV_ALL);
-        holder.tvTime.setText(time);
+        SpannableString timeSpannable = new SpannableString(
+                AppUtil.getAbbreviatedTimeSpan(storyItem.getTime() * 1000));
+        holder.tvTime.setText(timeSpannable);
         holder.tvComments.setText(storyItem.getDescendants() + " Comments");
         holder.tvScore.setText(String.valueOf(storyItem.getScore()));
 
@@ -83,13 +85,15 @@ public class StoryDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         StoryDetail story = mStoryDetails.get(position);
         ResponseStoryItem storyItem = story.getStoryItem();
 
-        holder.tvText.setText(storyItem.getText());
+        String text = storyItem.getText();
+        if (text != null) {
+            holder.tvText.setText(fromHtml(text));
+        }
+        holder.tvText.setVisibility(text != null ? View.VISIBLE : View.INVISIBLE);
         holder.tvUser.setText(storyItem.getBy());
-        CharSequence time = DateUtils.formatDateTime(
-                mContext,
-                storyItem.getTime(),
-                DateUtils.FORMAT_ABBREV_ALL);
-        holder.tvTime.setText(time);
+        SpannableString timeSpannable = new SpannableString(
+                AppUtil.getAbbreviatedTimeSpan(storyItem.getTime() * 1000));
+        holder.tvTime.setText(timeSpannable);
     }
 
     @Override
@@ -130,5 +134,17 @@ public class StoryDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             tvComments = (TextView) itemView.findViewById(R.id.tv_comments_count);
             tvScore = (TextView) itemView.findViewById(R.id.tv_score);
         }
+    }
+
+
+    @SuppressWarnings("deprecation")
+    public static Spanned fromHtml(String html) {
+        Spanned result;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            result = Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY);
+        } else {
+            result = Html.fromHtml(html);
+        }
+        return result;
     }
 }
