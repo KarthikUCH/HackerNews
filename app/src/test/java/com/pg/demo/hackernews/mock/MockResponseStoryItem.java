@@ -8,7 +8,7 @@ import com.pg.demo.hackernews.network.models.gson.ResponseStoryItem;
 
 public class MockResponseStoryItem {
 
-    private long id = 14871127;
+    private long id = 24871127;
     private boolean deleted = false;
     private String type = "story";
     private String by = "iloveluce";

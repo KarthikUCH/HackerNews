@@ -184,7 +184,8 @@ public class TopStoryManager {
             return;
         }
         flagLoadingStories = true;
-        mObserver.setRefreshing(true);
+        if (mObserver != null)
+            mObserver.setRefreshing(true);
         Observable.defer(() -> getTopStoriesObservable())
                 .subscribeOn(mScheduler)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -200,7 +201,8 @@ public class TopStoryManager {
                         () -> {
                             Log.i(TAG, "OnCompleted");
                             flagLoadingStories = false;
-                            mObserver.setRefreshing(false);
+                            if (mObserver != null)
+                                mObserver.setRefreshing(false);
                         }
                 );
     }

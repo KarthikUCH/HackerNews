@@ -22,9 +22,6 @@ import okhttp3.mockwebserver.MockWebServer;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import rx.Scheduler;
-import rx.android.plugins.RxAndroidPlugins;
-import rx.android.plugins.RxAndroidSchedulersHook;
-import rx.schedulers.Schedulers;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
@@ -57,12 +54,6 @@ public class TestTopItems {
 
         mTopStoryManager = new TopStoryManager(mContext, mDbHelper, mScheduler, mRestServiceFactory);
 
-        RxAndroidPlugins.getInstance().registerSchedulersHook(new RxAndroidSchedulersHook() {
-            @Override
-            public Scheduler getMainThreadScheduler() {
-                return Schedulers.immediate();
-            }
-        });
     }
 
     @Test
@@ -111,36 +102,10 @@ public class TestTopItems {
         assertEquals(responseStoryItem, null);
     }
 
-    /*@Test
-    public void testRetrieveTopStories() throws Exception {
-        String fileNameTopStory = "top_item_200_ok_response.json";
-        String fileNameItemDetails = "item_detail_200_0k.json";
-
-        //TopStoryManager spy = spy(mTopStoryManager);
-
-        mMockWebServer.enqueue(new MockResponse().setResponseCode(200)
-                .setBody(FileUtil.getFileContentFromPath(this, fileNameTopStory)));
-        for (int i = 0; i < 10; i++) {
-            mMockWebServer.enqueue(new MockResponse().setResponseCode(200)
-                    .setBody(FileUtil.getFileContentFromPath(this, fileNameItemDetails)));
-        }
-
-        when(mRestServiceFactory.create(HackersNewsService.class)).thenReturn(getHackersNewsApiService());
-        //when(spy.insertTopStoryId(anyLong())).thenReturn(anyLong());
-
-        Observable<ResponseStoryItem> topStoryObservable = mTopStoryManager.getTopStoriesObservable();
-        TestSubscriber<ResponseStoryItem> topStorySubscriber = new TestSubscriber<>();
-        topStoryObservable.subscribe(topStorySubscriber);
-
-        topStorySubscriber.assertNoErrors();
-        topStorySubscriber.getOnNextEvents();
-
-    }*/
 
     @After
     public void tearDown() throws Exception {
         mMockWebServer.shutdown();
-        RxAndroidPlugins.getInstance().reset();
     }
 
 

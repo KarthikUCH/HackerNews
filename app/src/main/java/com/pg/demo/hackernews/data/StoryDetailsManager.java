@@ -166,20 +166,7 @@ public class StoryDetailsManager {
     */
 
     private void retrieveStoryComments(ArrayList<Long> kidsIds) {
-        subscription = Observable.defer(() -> Observable.just(kidsIds))
-                .map(idLst -> {
-                    ArrayList<Long> kidsItemList = new ArrayList<>();
-                    for (long kidId : idLst) {
-                        ResponseStoryItem item = mTopStoryManager.retrieveStoryDetail(kidId);
-                        mTopStoryManager.insertItemDetails(item);
-                        if (item != null && item.getKids() != null && item.getKids().length > 0) {
-                            for (long kidsId : item.getKids()) {
-                                kidsItemList.add(kidsId);
-                            }
-                        }
-                    }
-                    return kidsItemList;
-                })
+        subscription = Observable.defer(() -> retrieveStoryCommentsObservable(kidsIds))
                 .subscribeOn(mScheduler)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
@@ -196,6 +183,24 @@ public class StoryDetailsManager {
                         }
                 );
 
+    }
+
+
+    public Observable<ArrayList<Long>> retrieveStoryCommentsObservable(ArrayList<Long> kidsIds) {
+        return Observable.just(kidsIds)
+                .map(idLst -> {
+                    ArrayList<Long> kidsItemList = new ArrayList<>();
+                    for (long kidId : idLst) {
+                        ResponseStoryItem item = mTopStoryManager.retrieveStoryDetail(kidId);
+                        mTopStoryManager.insertItemDetails(item);
+                        if (item != null && item.getKids() != null && item.getKids().length > 0) {
+                            for (long kidsId : item.getKids()) {
+                                kidsItemList.add(kidsId);
+                            }
+                        }
+                    }
+                    return kidsItemList;
+                });
     }
 
 
